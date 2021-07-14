@@ -1,5 +1,6 @@
 import boto3
 import os
+import numpy as np
 from naas_drivers import airtable
 from dotenv import load_dotenv
 import pandas as pd
@@ -46,11 +47,14 @@ df = df[
      'Launch Freeform Text', 'Info Source', 'Unique Identifier(RL)', 'Import Date']]  # Religious Other not in due to empty column
 
 df.reset_index(drop=True, inplace=True)
+df['Postcode'] = df.Postcode.astype('Int64')
+df['Postcode'] = df.Postcode.astype('str')
 
-print(df.shape)
+df['Postcode'] = df.Postcode.apply(lambda x: f'0{x}' if len(x) == 4 else x)
+df['Postcode'] = df.Postcode.apply(lambda x: 'N/A' if x == '0<NA>' else x)
+
 print(df.head(5))
 print(df.columns)
-
 
 
 df.to_json(json_out, orient='records', date_format='iso')
