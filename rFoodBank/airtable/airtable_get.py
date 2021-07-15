@@ -1,36 +1,7 @@
-# import requests
-# import os
-# import json
-# from dotenv import load_dotenv
-#
-# load_dotenv()
-#
-# AIRTABLE_API_KEY = os.environ.get('AIRTABLE_API_KEY')
-# AIRTABLE_BASE_ID = os.environ.get('AIRTABLE_BASE_ID')
-# AIRTABLE_TABLE_NAME = 'Resources'
-# GET_ENDPOINT = f'https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}?maxRecords=450&view=All%20Data%20%28by%20username%29'
-#
-# json_out = os.path.join(os.path.expanduser('~'), 'PycharmProjects', 'rMalaysiaFoodBank', 'rFoodBank', 'airtable',
-#                         'Resources_150.json')
-#
-# # python requests
-# headers = {
-#     'Authorization': f'Bearer {AIRTABLE_API_KEY}',
-#     'Content-Type': 'application/json'
-# }
-#
-# r = requests.get(GET_ENDPOINT, headers=headers)
-# data = r.json()
-#
-# print(data)
-#
-# with open(json_out, 'w') as f:
-#     json.dump(data, f)
-import pandas as pd
-import requests
 import os
-
 import json
+import boto3
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -57,7 +28,7 @@ while True:
         records = list(response_Table['records'])
         result.append(records)
         # print(f'record: {records[0]["id"]} , len: {len(records)} ')
-        print(f'{response_Table} \n \n')
+        # print(f'{response_Table} \n \n')
 
         try:
             offset = response_Table['offset']
@@ -70,22 +41,25 @@ while True:
     except os.error as e:
         print(e)
 
+# print(len(result))
 
+json_out = os.path.join(os.path.expanduser('~'), 'PycharmProjects', 'rMalaysiaFoodBank', 'rFoodBank', 'airtable',
+                        'rWhiteFlagProject.json')
 
-print(len(result))
-# json_out = os.path.join(os.path.expanduser('~'), 'PycharmProjects', 'rMalaysiaFoodBank', 'rFoodBank', 'airtable',
-#                         'Resources_150.json')
-#
-# # python requests
-# headers = {
-#     'Authorization': f'Bearer {AIRTABLE_API_KEY}',
-#     'Content-Type': 'application/json'
-# }
-#
-# r = requests.get(GET_ENDPOINT, headers=headers)
-# data = r.json()
-#
-# print(data)
-#
-# with open(json_out, 'w') as f:
-#     json.dump(data, f)
+with open(json_out, 'w') as f:
+    json.dump(result, f)
+
+S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
+S3_SECRET = os.environ.get('S3_SECRET')
+client = boto3.client(
+    's3',
+    aws_access_key_id=S3_ACCESS_KEY,
+    aws_secret_access_key=S3_SECRET
+)
+
+for file in os.listdir():
+    if 'rWhiteFlagProject.json' in file:
+        bucket = 'whiteflagproject'
+        key = f'rWhiteFlagProject.json'
+        client.upload_file(file, bucket, key)
+        print(f'uploaded to: {bucket}/{key}')
