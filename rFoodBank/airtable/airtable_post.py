@@ -21,6 +21,7 @@ headers = {
     'Content-Type': 'application/json'
 }
 
+# TODO: fill data with pandas value after reading csv
 data = {
   "records": [
     {
@@ -59,7 +60,7 @@ data = {
 }
 
 # TODO: add loop to request.post
-r = requests.post(GET_ENDPOINT, data=data, headers=headers)
+r = requests.post(POST_ENDPOINT, data=data, headers=headers)
 
 
 
