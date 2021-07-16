@@ -43,23 +43,25 @@ while True:
 
 # print(len(result))
 
-json_out = os.path.join(os.path.expanduser('~'), 'PycharmProjects', 'rMalaysiaFoodBank', 'rFoodBank', 'airtable',
-                        'rWhiteFlagProject.json')
+sd = bytes(json.dumps().encode('UTF-8'))
 
-with open(json_out, 'w') as f:
-    json.dump(result, f)
+# json_out = os.path.join(os.path.expanduser('~'), 'PycharmProjects', 'rMalaysiaFoodBank', 'rFoodBank', 'airtable',
+#                         'rWhiteFlagProject.json')
 
-S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
-S3_SECRET = os.environ.get('S3_SECRET')
-client = boto3.client(
-    's3',
-    aws_access_key_id=S3_ACCESS_KEY,
-    aws_secret_access_key=S3_SECRET
-)
+# with open(json_out, 'w') as f:
+#     json.dump(result, f)
 
-for file in os.listdir():
-    if 'rWhiteFlagProject.json' in file:
-        bucket = 'whiteflagproject'
-        key = f'rWhiteFlagProject.json'
-        client.upload_file(file, bucket, key)
-        print(f'uploaded to: {bucket}/{key}')
+# S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY')
+# S3_SECRET = os.environ.get('S3_SECRET')
+# client = boto3.client(
+#     's3',
+#     aws_access_key_id=S3_ACCESS_KEY,
+#     aws_secret_access_key=S3_SECRET
+# )
+#
+# for file in os.listdir():
+#     if 'rWhiteFlagProject.json' in file:
+#         bucket = 'whiteflagproject'
+#         key = f'rWhiteFlagProject.json'
+#         client.upload_file(file, bucket, key)
+#         print(f'uploaded to: {bucket}/{key}')
